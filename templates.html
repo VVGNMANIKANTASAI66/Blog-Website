@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Home</title>
+</head>
+<body>
+    <h1>Blog Website</h1>
+
+    {% if current_user.is_authenticated %}
+        <p>Welcome, {{ current_user.username }} | <a href="{{ url_for('logout') }}">Logout</a></p>
+        <p><a href="{{ url_for('add') }}">Create New Post</a></p>
+    {% else %}
+        <p><a href="{{ url_for('login') }}">Login</a> | <a href="{{ url_for('register') }}">Register</a></p>
+    {% endif %}
+
+    <h2>All Posts:</h2>
+    {% for post in posts %}
+        <div style="border:1px solid black; margin:10px; padding:10px;">
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.content }}</p>
+            <small>By: {{ post.author }}</small>
+            {% if current_user.is_authenticated and post.author == current_user.username %}
+                <p>
+                    <a href="{{ url_for('edit', id=post.id) }}">Edit</a> |
+                    <a href="{{ url_for('delete', id=post.id) }}">Delete</a>
+                </p>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>No posts yet!</p>
+    {% endfor %}
+</body>
+</html>
